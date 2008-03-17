@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 1202880178) do
+ActiveRecord::Schema.define(:version => 1205722772) do
 
   create_table "asset_versions", :force => true do |t|
     t.column "asset_id",       :integer
@@ -100,7 +100,16 @@ ActiveRecord::Schema.define(:version => 1202880178) do
     t.column "is_all_day",       :boolean, :default => false
     t.column "is_cancelled",     :boolean, :default => false
     t.column "is_tentative",     :boolean, :default => true
-    t.column "location",         :string
+    t.column "address1",         :string
+    t.column "address2",         :string
+    t.column "city",             :string
+    t.column "state",            :string
+    t.column "postal_code",      :string
+    t.column "country",          :string
+    t.column "directions",       :text
+    t.column "time_zone",        :string
+    t.column "latitude",         :float
+    t.column "longitude",        :float
   end
 
   create_table "federations", :force => true do |t|
