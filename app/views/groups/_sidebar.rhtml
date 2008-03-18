@@ -12,6 +12,9 @@
 <div class='sidelink'>
   <%= link_to 'tasks', groups_url(:action => 'tasks', :id => @group) %>
 </div>
+<div class='sidelink'>
+  <%= link_to 'calendar', groups_url(:action => 'calendar_month', :id => @group) %>
+</div>
 <div class='sidetail'></div>
 </div>
 

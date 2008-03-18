@@ -36,7 +36,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.groups  'groups/:action/:id', :controller => 'groups'
   map.group   'groups/:action/:id', :controller => 'groups'
-  map.connect 'groups/:action/:id/*path', :controller => 'groups', :action => /tags|archive|calendar|search/
+  map.connect 'groups/:action/:id/*path', :controller => 'groups', :action => /tags|archive|search|calendar_month|list_by_day|list_by_week|list_by_month/
     
   map.connect 'pages/search/*path', :controller => 'pages', :action => 'search'
             
