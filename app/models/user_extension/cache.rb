@@ -161,16 +161,24 @@ module UserExtension
       ])
     end
 
+    def get_user_relation_ids(type)
+      UserRelation.connection.select_values(%Q[SELECT user_relations.partner_id FROM user_relations WHERE type = '#{type}' AND user_relations.user_id = #{self.id}])
+    end
+    
     def get_contact_ids()
       return [[],[]] unless self.id
-      foe = [] # no foes yet.
+      foes = [] # no foes yet.
+=begin
+# deprecated during reorganising contacts => user_relations
       friend = Contact.connection.select_values( %Q[
         SELECT contacts.contact_id FROM contacts
         WHERE type = 'Friend' AND contacts.user_id = #{self.id}
       ])
-      [friend,foe]
+=end    
+      friends = get_user_relation_ids('Friendship')
+      [foes,friends]
     end
-    
+
     def update_tag_cache
       # this query sucks and should be optimized
       # see http://dev.mysql.com/doc/refman/5.0/en/in-subquery-optimization.html

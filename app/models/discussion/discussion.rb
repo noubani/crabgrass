@@ -11,8 +11,16 @@ class Discussion < ActiveRecord::Base
   has_one :profile, :foreign_key => 'discussion_id'
   has_one :acquaintance, :foreign_key => 'discussion_id'
   has_many :posts, :order => 'posts.created_at', :dependent => :destroy, :class_name => 'Post'
-
-  belongs_to :commentable, :polymorph => true
+  
+  has_many :user_relations
+  has_one :user, :as => :commentable
+  has_many :users, :through => :user_relations, :foreign_key => "user_id"
+  has_many :partners, :through => :user_relations, :foreign_key => "partner_id"
+  
+  def contacts
+    users && partners
+  end
+  
   
   ## 
   ## attributes
@@ -28,6 +36,7 @@ class Discussion < ActiveRecord::Base
   ## methods
   ##
 
+  
   def per_page() 30 end
  
   # this doesn't appear to be called anywhere.

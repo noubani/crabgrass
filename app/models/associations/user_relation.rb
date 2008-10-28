@@ -4,6 +4,10 @@ class UserRelation < ActiveRecord::Base
 
   after_save :reverse_create!
   after_destroy :reverse_destroy!
+
+      ## DISCUSSIONS
+    belongs_to :discussion
+
   
   def reverse_create!    
     unless self.class.name.constantize.find_by_user_id_and_partner_id(self.partner_id,self.user_id)
