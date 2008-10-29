@@ -1,10 +1,10 @@
 class RenameContactsToUserRelations < ActiveRecord::Migration
   def self.up
-#    drop_table :user_relations
-  #  rename_table :contacts, :user_relations
-  #  create_table :user_relations do
-  #  end
- #   execute 'ALTER TABLE user_relations ADD COLUMN id int(11) NOT NULL auto_increment, ADD PRIMARY KEY (id)'
+    drop_table :user_relations
+    rename_table :contacts, :user_relations
+    create_table :user_relations do
+    end
+    execute 'ALTER TABLE user_relations ADD COLUMN id int(11) NOT NULL auto_increment, ADD PRIMARY KEY (id)'
     add_column :user_relations, :type, :string
     add_column :user_relations, :discussion_id, :integer
     add_column :user_relations, :user_id, :integer
