@@ -9,13 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081026033235) do
+ActiveRecord::Schema.define(:version => 20081027194222) do
 
   create_table "activities", :force => true do |t|
     t.integer  "subject_id",   :limit => 11
     t.string   "subject_type"
+    t.string   "subject_name"
     t.integer  "object_id",    :limit => 11
     t.string   "object_type"
+    t.string   "object_name"
     t.string   "type"
     t.string   "extra"
     t.integer  "key",          :limit => 11
@@ -92,13 +94,6 @@ ActiveRecord::Schema.define(:version => 20081026033235) do
 
   add_index "channels_users", ["channel_id", "user_id"], :name => "index_channels_users"
 
-  create_table "contacts", :id => false, :force => true do |t|
-    t.integer "user_id",    :limit => 11
-    t.integer "contact_id", :limit => 11
-  end
-
-  add_index "contacts", ["contact_id", "user_id"], :name => "index_contacts"
-
   create_table "crypt_keys", :force => true do |t|
     t.integer "profile_id",  :limit => 11
     t.boolean "preferred",                 :default => false
@@ -110,11 +105,13 @@ ActiveRecord::Schema.define(:version => 20081026033235) do
   end
 
   create_table "discussions", :force => true do |t|
-    t.integer  "posts_count",   :limit => 11, :default => 0
+    t.integer  "posts_count",      :limit => 11, :default => 0
     t.datetime "replied_at"
-    t.integer  "replied_by_id", :limit => 11
-    t.integer  "last_post_id",  :limit => 11
-    t.integer  "page_id",       :limit => 11
+    t.integer  "replied_by_id",    :limit => 11
+    t.integer  "last_post_id",     :limit => 11
+    t.integer  "page_id",          :limit => 11
+    t.integer  "commentable_id",   :limit => 11
+    t.string   "commentable_type"
   end
 
   add_index "discussions", ["page_id"], :name => "index_discussions_page_id"
@@ -563,6 +560,13 @@ ActiveRecord::Schema.define(:version => 20081026033235) do
   add_index "user_participations", ["star"], :name => "index_user_participations_star"
   add_index "user_participations", ["resolved"], :name => "index_user_participations_resolved"
   add_index "user_participations", ["attend"], :name => "index_user_participations_attend"
+
+  create_table "user_relations", :force => true do |t|
+    t.string  "type"
+    t.integer "discussion_id", :limit => 11
+    t.integer "user_id",       :limit => 11
+    t.integer "partner_id",    :limit => 11
+  end
 
   create_table "users", :force => true do |t|
     t.string   "login"
