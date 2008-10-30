@@ -1,5 +1,6 @@
 class AddMediaFlagsAndPageTermsToAssets < ActiveRecord::Migration
   def self.up
+=begin  
     add_column :page_terms, :media, :string
 
     add_column :assets, :page_terms_id, :integer
@@ -8,8 +9,8 @@ class AddMediaFlagsAndPageTermsToAssets < ActiveRecord::Migration
     add_column :assets, :is_audio, :boolean
     add_column :assets, :is_video, :boolean
     add_column :assets, :is_document, :boolean
-    add_column :assets, :updated_at, :datetime
-
+#    add_column :assets, :updated_at, :datetime
+=end
     add_index :assets, ["page_terms_id"], :name => "pterms"
     
     ThinkingSphinx.updates_enabled = false

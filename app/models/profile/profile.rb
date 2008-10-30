@@ -69,6 +69,10 @@ class Profile < ActiveRecord::Base
     self.entity_type = 'User' if self.entity_type =~ /User/
     self.entity_type = 'Group' if self.entity_type =~ /Group/
   end
+
+  ### relationship to a discussion #########################################
+  belongs_to :discussion
+  
   
   ### basic info ###########################################################
 

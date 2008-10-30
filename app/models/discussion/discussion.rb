@@ -13,7 +13,13 @@ class Discussion < ActiveRecord::Base
   has_many :posts, :order => 'posts.created_at', :dependent => :destroy, :class_name => 'Post'
   
   has_many :user_relations
-  has_one :user, :as => :commentable
+  
+  # i think, this is too stressful -saf
+  #has_one :user, :as => :commentable
+  #has_one :profile, :as => :commentable
+  # instead
+  belongs_to :user
+  
   has_many :users, :through => :user_relations, :foreign_key => "user_id"
   has_many :partners, :through => :user_relations, :foreign_key => "partner_id"
   
