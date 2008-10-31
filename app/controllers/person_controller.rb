@@ -74,7 +74,7 @@ class PersonController < ApplicationController
     # @profile = Profile.find params[:profile_id]
     @user = User.find(params[:id])
     unless @conversation = UserRelation.find_by_user_id_and_partner_id(@user.id, current_user.id)
-      @user.add_contact current_user
+      @user.add_contact! current_user
       @conversation = UserRelation.find_by_user_id_and_partner_id(@user.id, current_user.id)
     end  
     @conversation.discussion ? @conversation.discussion : @conversation.discussion = Discussion.create ;
