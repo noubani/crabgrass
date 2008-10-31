@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081027194222) do
+ActiveRecord::Schema.define(:version => 20081029060705) do
 
   create_table "activities", :force => true do |t|
     t.integer  "subject_id",   :limit => 11
@@ -93,6 +93,11 @@ ActiveRecord::Schema.define(:version => 20081027194222) do
   end
 
   add_index "channels_users", ["channel_id", "user_id"], :name => "index_channels_users"
+
+  create_table "contacts", :force => true do |t|
+    t.integer "user_id",    :limit => 11
+    t.integer "contact_id", :limit => 11
+  end
 
   create_table "crypt_keys", :force => true do |t|
     t.integer "profile_id",  :limit => 11
@@ -560,13 +565,6 @@ ActiveRecord::Schema.define(:version => 20081027194222) do
   add_index "user_participations", ["star"], :name => "index_user_participations_star"
   add_index "user_participations", ["resolved"], :name => "index_user_participations_resolved"
   add_index "user_participations", ["attend"], :name => "index_user_participations_attend"
-
-  create_table "user_relations", :force => true do |t|
-    t.string  "type"
-    t.integer "discussion_id", :limit => 11
-    t.integer "user_id",       :limit => 11
-    t.integer "partner_id",    :limit => 11
-  end
 
   create_table "users", :force => true do |t|
     t.string   "login"
