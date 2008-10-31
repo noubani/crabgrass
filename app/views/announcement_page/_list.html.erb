@@ -1,0 +1,5 @@
+<ul>
+<% @announcements.each do |announcement| %>
+<li><%= link_to @page.title, page_url(@page) %></li>
+<% end %>
+</ul>

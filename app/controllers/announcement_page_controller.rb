@@ -2,7 +2,7 @@ class AnnouncementPageController < BasePageController
   
  
   def create
-    @page_class = self.class
+    @page_class = AnnouncementPage
     if params[:cancel]
       return redirect_to(create_page_url(nil, :group => params[:group]))
     elsif request.post?
@@ -15,9 +15,16 @@ class AnnouncementPageController < BasePageController
       end
     end
     @stylesheet = 'page_creation'
-    render :template => 'base_page/create'
+    render :template => 'announcement_page/create'
   end
 
+  
+  def show
+    @wiki = @page
+    render :controller => 'wiki', :action => 'show'
+  end
+  
+  
 private  
   
   # dump the sidebar
