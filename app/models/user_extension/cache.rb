@@ -172,7 +172,7 @@ module UserExtension
 # deprecated during reorganising contacts => user_relations
       friend = Contact.connection.select_values( %Q[
         SELECT contacts.contact_id FROM contacts
-        WHERE type = 'Friend' AND contacts.user_id = #{self.id}
+        WHERE contacts.user_id = #{self.id}
       ])
 =end    
       friends = get_user_relation_ids('Friendship')

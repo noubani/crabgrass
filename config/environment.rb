@@ -44,16 +44,14 @@ Rails::Initializer.run do |config|
   ### (2) CONFIG BLOCK
   ###
 
-  config.load_paths += %w(assets associations discussion chat profile poll task requests activity).collect do |dir|
-    "#{RAILS_ROOT}/app/models/#{dir}"
-  end
+  config.load_paths += %w(activity assets associations discussion chat observers profile poll task requests).collect{|dir|"#{RAILS_ROOT}/app/models/#{dir}"}
 
   # this is required because we have a mysql specific fulltext index.
   config.active_record.schema_format = :sql
 
   # Activate observers that should always be running
   config.active_record.observers = :user_observer, :membership_observer,
-    :contact_observer, :group_observer
+    :group_observer # :user_relation_observer
 
   # currently, crabgrass stores an excessive amount of information in the session
   # in order to do smart breadcrumbs. These means we cannot use cookie based

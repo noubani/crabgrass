@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081027194222) do
+ActiveRecord::Schema.define(:version => 20081029060705) do
 
   create_table "activities", :force => true do |t|
     t.integer  "subject_id",   :limit => 11
@@ -21,12 +21,12 @@ ActiveRecord::Schema.define(:version => 20081027194222) do
     t.string   "type"
     t.string   "extra"
     t.integer  "key",          :limit => 11
-    t.boolean  "public",                     :default => false
     t.datetime "created_at"
+    t.integer  "access",       :limit => 1,  :default => 2
   end
 
-  execute "CREATE INDEX subject_0_4_0 ON activities (subject_id,subject_type(4),public)"
   add_index "activities", ["created_at"], :name => "created_at"
+  execute "CREATE INDEX subject_0_4_0 ON activities (subject_id,subject_type(4),access)"
 
   create_table "asset_versions", :force => true do |t|
     t.integer  "asset_id",       :limit => 11
@@ -94,6 +94,11 @@ ActiveRecord::Schema.define(:version => 20081027194222) do
 
   add_index "channels_users", ["channel_id", "user_id"], :name => "index_channels_users"
 
+  create_table "contacts", :force => true do |t|
+    t.integer "user_id",    :limit => 11
+    t.integer "contact_id", :limit => 11
+  end
+
   create_table "crypt_keys", :force => true do |t|
     t.integer "profile_id",  :limit => 11
     t.boolean "preferred",                 :default => false
@@ -135,10 +140,13 @@ ActiveRecord::Schema.define(:version => 20081027194222) do
   end
 
   create_table "external_videos", :force => true do |t|
-    t.string "media_key"
-    t.string "media_url"
-    t.string "media_thumbnail_url"
-    t.text   "media_embed"
+    t.string   "media_key"
+    t.string   "media_url"
+    t.string   "media_thumbnail_url"
+    t.text     "media_embed"
+    t.integer  "page_terms_id",       :limit => 11
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   create_table "federatings", :force => true do |t|
@@ -408,6 +416,7 @@ ActiveRecord::Schema.define(:version => 20081027194222) do
     t.boolean  "may_burden"
     t.boolean  "may_spy"
     t.string   "language",               :limit => 5
+    t.integer  "discussion_id",          :limit => 11
   end
 
   add_index "profiles", ["entity_id", "entity_type", "language", "stranger", "peer", "friend", "foe"], :name => "profiles_index"
@@ -562,10 +571,12 @@ ActiveRecord::Schema.define(:version => 20081027194222) do
   add_index "user_participations", ["attend"], :name => "index_user_participations_attend"
 
   create_table "user_relations", :force => true do |t|
-    t.string  "type"
-    t.integer "discussion_id", :limit => 11
     t.integer "user_id",       :limit => 11
     t.integer "partner_id",    :limit => 11
+    t.string  "type"
+    t.boolean "is_active"
+    t.float   "value"
+    t.integer "discussion_id", :limit => 11
   end
 
   create_table "users", :force => true do |t|
