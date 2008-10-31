@@ -1,0 +1,35 @@
+class AnnouncementPageController < BasePageController
+  
+ 
+  def create
+    @page_class = self.class
+    if params[:cancel]
+      return redirect_to(create_page_url(nil, :group => params[:group]))
+    elsif request.post?
+      begin 
+       @page = AnnouncementPage.create!(params[:page],:user => current_user,:share_with => params[:recipients],:access => (params[:access]||'view').to_sym,:flow => FLOW[:announcement])       
+        return redirect_to(page_url(@page))
+      rescue Exception => exc
+        @page = exc.record
+        flash_message_now :exception => exc
+      end
+    end
+    @stylesheet = 'page_creation'
+    render :template => 'base_page/create'
+  end
+
+private  
+  
+  # dump the sidebar
+  def setup_default_view() end
+  
+  
+  def create_new_page!(page_class)
+     page_class.create!(params[:page].merge(
+       :user => current_user,
+       :share_with => params[:recipients],
+       :access => (params[:access]||'view').to_sym
+     ))  
+  end
+  
+end

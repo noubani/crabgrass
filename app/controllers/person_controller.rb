@@ -24,7 +24,10 @@ class PersonController < ApplicationController
     @conversation = UserRelation.find_by_user_id_and_partner_id(current_user.id,@user.id)
     if @conversation && @conversation.discussion
       @conversation = @conversation.discussion
+    else
+      @conversation = nil
     end
+    
     @wall_discussion = @user.ensure_discussion
   end
 
