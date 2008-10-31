@@ -21,7 +21,10 @@ class PersonController < ApplicationController
     params[:path] ||= "descending/updated_at"
     @activities = Activity.for_user(@user, (current_user if logged_in?)).newest.unique.find(:all)
     search
-    @conversation = UserRelation.find_by_user_id_and_partner_id(current_user.id,@user.id).discussion
+    @conversation = UserRelation.find_by_user_id_and_partner_id(current_user.id,@user.id)
+    if @conversation && @conversation.discussion
+      @conversation = @conversation.discussion
+    end
     @wall_discussion = @user.ensure_discussion
   end
 
@@ -67,8 +70,11 @@ class PersonController < ApplicationController
     # we don't get the profile_id, where should it comefrom?
     # @profile = Profile.find params[:profile_id]
     @user = User.find(params[:id])
-    @conversation = UserRelation.find_by_user_id_and_partner_id(@user.id, current_user.id)
-    @conversation.discussion ? @ocnversation : @conversation.discussion = Discussion.create ;
+    unless @conversation = UserRelation.find_by_user_id_and_partner_id(@user.id, current_user.id)
+      @user.add_contact current_user
+      @conversation = UserRelation.find_by_user_id_and_partner_id(@user.id, current_user.id)
+    end  
+    @conversation.discussion ? @conversation : @conversation.discussion = Discussion.create ;
     @conversation = @conversation.discussion
     @profile = @conversation.profile if @conversation.profile#profile is not really used here?
     @post = Post.new(params[:post])
