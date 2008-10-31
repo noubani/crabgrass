@@ -1,4 +1,4 @@
-class AnnouncementPageController < BasePageController
+class AnnouncementPageController < WikiController
   
  
   def create
