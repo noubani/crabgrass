@@ -75,7 +75,6 @@ class PersonController < ApplicationController
     @post.discussion = @conversation
     @post.user = current_user
     @post.save!
-    raise "no user given" if @conversation.user.nil?
     redirect_to(:controller => 'person', :action => 'show', :id => @user.login)
 
   
