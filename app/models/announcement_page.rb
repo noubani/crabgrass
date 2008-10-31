@@ -1,0 +1,2 @@
+class AnnouncementPage < WikiPage
+end
