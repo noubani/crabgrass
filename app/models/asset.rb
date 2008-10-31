@@ -31,6 +31,7 @@ TODO:
 =end
 
 class Asset < ActiveRecord::Base
+  include PageData
 
   # Polymorph does not seem to be working with subclasses of Asset. For parent_type,
   # it always picks "Asset". So, we hardcode what the query should be:
@@ -41,27 +42,15 @@ class Asset < ActiveRecord::Base
   include AssetExtension::Upload
   validates_presence_of :filename
 
+  
   ##
-  ## FINDERS
+  ## ACCESS
   ##
-
-  # Use page_terms to find what assets the user has access to. Note that it is
-  # necessary to match against both access_ids and tags, since the index only
-  # works if both fields are included.
-  # FIXME: as far as I can tell page_terms never gets set in the first place,
-  # as an asset is always associated with an AssetPage. Polymorphic associations
-  # might work in this case, but I'm not sure if that will break anything else.
-  #  --niklas
-  named_scope :visible_to, lambda { |*args|
-    access_filter = PageTerms.access_filter_for(*args)
-    { :select => 'assets.*', :joins => :page_terms,
-      :conditions => ['MATCH(page_terms.access_ids,page_terms.tags) AGAINST (? IN BOOLEAN MODE)', access_filter]
-    }
-  }
   
   def has_access! perm, user
-    self.page.has_access! perm, user
-  rescue
+    raise PermissionDenied unless self.page
+    p = self.page.has_access!(perm, user)
+  rescue PermissionDenied
     Gallery rescue nil # assure load_missing_constant loads this if possible
     unless defined?(Gallery) &&
         self.galleries.any? &&
@@ -70,6 +59,11 @@ class Asset < ActiveRecord::Base
     end
     true
   end
+
+  
+  ##
+  ## FINDERS
+  ##
   
   def is_cover_of? gallery
     raise ArgumentError.new() unless gallery.kind_of? Gallery
@@ -79,23 +73,12 @@ class Asset < ActiveRecord::Base
 
   named_scope :not_attachment, :conditions => ['is_attachment = ?',false]
 
-  named_scope :most_recent, :order => 'updated_at DESC'
-
   # one of :image, :audio, :video, :document
   named_scope :media_type, lambda {|type|
     raise TypeError.new unless [:image,:audio,:video,:document].include?(type)
     {:conditions => ["is_#{type} = ?",true]}
   }
 
-  named_scope :exclude_ids, lambda {|ids|
-    if ids.any? and ids.is_a? Array
-      {:conditions => ['assets.id NOT IN (?)', ids]}
-    else
-      {}
-    end
-  }
-
-       
   ##
   ## METHODS COMMON TO ASSET AND ASSET::VERSION
   ## 
@@ -183,13 +166,14 @@ class Asset < ActiveRecord::Base
 
   # an asset might have two different types of associations to a page. it could
   # be the data of page (1), or it could be an attachment of the page (2).
-  has_many :pages, :as => :data                                             # (1)
   belongs_to :parent_page, :foreign_key => 'page_id', :class_name => 'Page' # (2)
   def page()
-    page_id ? parent_page : pages.first
-  end
+    return page_id ? parent_page : pages.first
 
-  belongs_to :page_terms
+    # I think this is a bad idea... how will the page get destroyed if the asset
+    # is destroyed?
+    # p = self.pages.create(:title => self.filename, :data_id => self.id)
+  end
 
   # some asset subclasses (like AudioAsset) will display using flash
   # they should override this method to say which partial will render this code
@@ -225,9 +209,25 @@ class Asset < ActiveRecord::Base
   # create on that class.
   # eg. Asset.make(attributes) ---> ImageAsset.create(attributes)
   #     if attributes contains an image file.
+  # if attributes[:page] is given, an AssetPage is created with the given 
+  # attributes. The page's title defaults to the original filename of the
+  # uploaded asset.
   def self.make(attributes = nil)
+    begin
+      return self.make!(attributes)
+    rescue Exception => exc
+      return nil
+    end
+  end
+  
+  def self.make!(attributes = nil)
+    page_attrs = attributes.delete(:page)
     asset_class = Asset.class_for_mime_type( mime_type_from_data(attributes[:uploaded_data]) )
-    asset_class.create(attributes)
+    asset = asset_class.create!(attributes)
+    if page_attrs
+      AssetPage.create!({:data_id => asset.id, :title => asset.filename}.merge(page_attrs))
+    end
+    asset
   end
 
   # like make(), but builds the asset in memory and does not save it.
@@ -301,10 +301,7 @@ class Asset < ActiveRecord::Base
   # returns either :landscape or :portrait, depending on the format of the 
   # image.
   def image_format
-    raise TypeError unless self.is_image
-    if self.width.nil? || self.height.nil?
-      return :landscape
-    end
+    raise TypeError unless self.respond_to?(:width) && self.respond_to?(:height)
     self.width > self.height ? :landscape : :portrait
   end
 end

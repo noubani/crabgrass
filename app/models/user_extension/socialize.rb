@@ -74,24 +74,7 @@ module UserExtension::Socialize
         rel2.type = type
         rel2.save
       end
-      
-=begin
-# Will be deprecated soon      
-      has_and_belongs_to_many :contacts,
-        {:class_name => "User",
-        :join_table => "contacts",
-        :association_foreign_key => "contact_id",
-        :foreign_key => "user_id",
-        :uniq => true} do
-          def online
-            find( :all, 
-              :conditions => ['users.last_seen_at > ?',10.minutes.ago],
-              :order => 'users.last_seen_at DESC' )
-          end
-      end
-=end
-    
-      
+   
     end
   end
 
@@ -130,7 +113,7 @@ module UserExtension::Socialize
     if rel2 = UserRelation.find_by_user_id_and_partner_id(other_user.id,self.id,type)
        rel2.destroy
        other_user.update_contacts_cache
-    end  
+    end
   end
   
   ## PERMISSIONS
@@ -169,7 +152,6 @@ module UserExtension::Socialize
     end
     self.discussion
   end
-  
   
   ## RELATIONSHIPS
 
