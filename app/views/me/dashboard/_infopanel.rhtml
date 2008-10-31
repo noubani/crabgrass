@@ -1,9 +1,9 @@
 <table>
 <tr valign='top'>
   <td>
-    <% if current_user.friends.any? -%>
+    <% if current_user.contacts.any? -%>
       <h2><%= "Contacts"[:Contacts] %></h2>
-      <%= render :partial => 'avatars/boxes', :locals => {:people => current_user.friends, :side => 'left'} %>
+      <%= render :partial => 'avatars/boxes', :locals => {:people => current_user.contacts, :side => 'left'} %>
       <br style='clear:both'/>
       </td><td>&nbsp;
     <% end -%>

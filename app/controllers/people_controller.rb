@@ -19,7 +19,7 @@ class PeopleController < ApplicationController
   def list
     # @user_pages, @users = paginate :users, :per_page => 10
     if logged_in?
-      @contacts = current_user.friends
+      @contacts = current_user.contacts
       @peers = current_user.peers
     end
   end
