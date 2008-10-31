@@ -39,7 +39,7 @@ class RequestToFriend < Request
 
  
   def after_approval
-    recipient.add_contact!(created_by, :type => "Friendship")
+    recipient.add_contact!(created_by, :type => :friend)
   end
 
   def description
