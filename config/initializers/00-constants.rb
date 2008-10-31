@@ -6,7 +6,7 @@ ACCESS_EDIT = 2
 ACCESS_VIEW = 3
 
 # types of page flows
-FLOW = {:deleted => 3}.freeze
+FLOW = {:deleted => 3, :gallery => 4}.freeze
 
 # enum of media types
 MEDIA_TYPE = {
@@ -15,4 +15,6 @@ MEDIA_TYPE = {
   :video => 3,
   :document => 4
 }.freeze
+
+ARROW = " &raquo; "
 
