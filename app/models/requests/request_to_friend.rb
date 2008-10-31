@@ -11,7 +11,7 @@ class RequestToFriend < Request
   validates_format_of :recipient_type, :with => /User/
 
   def validate_on_create
-    if Contact.find_by_user_id_and_contact_id(created_by_id, recipient_id)
+    if UserRelation.find_by_user_id_and_partner_id(created_by_id, recipient_id)
       errors.add_to_base('Contact already exists')
     end
     if RequestToFriend.find_by_created_by_id_and_recipient_id_and_state(created_by_id, recipient_id, state)

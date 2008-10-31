@@ -21,6 +21,8 @@ class PersonController < ApplicationController
     params[:path] ||= "descending/updated_at"
     @activities = Activity.for_user(@user, (current_user if logged_in?)).newest.unique.find(:all)
     search
+    @conversation = UserRelation.find_by_user_id_and_partner_id(current_user.id,@user.id).discussion
+    @wall_discussion = @user.ensure_discussion
   end
 
   def search
@@ -39,12 +41,44 @@ class PersonController < ApplicationController
   end
   
   def add_wall_message
-    @profile = @user.profiles.visible_by(current_user)
+    # 1. get the user, whos discussionis edited
+    # 2. get the userr, who is editing the discussion
+    # if it's  private, we get UserRelation.blabla
+    # if not, we take @user.discussion
+   # @profile = @user.profiles.visible_by(current_user)
+    @user = User.find(params[:id])
+    if @user.discussion.nil?
+      @user.discussion = Discussion.create
+    end
+    @discussion = @user.discussion
+    # TODO how do we find out if user is allowed to post  in here?
     @post = Post.new(params[:post])
-    @post.discussion = @profile.ensure_wall
+    @post.discussion  = @user.discussion
+    # don't see the reason for ensure_wall
+    # @post.discussion = @user.ensure_wall
     @post.user = current_user
     @post.save!
-    redirect_to(:controller => 'person', :action => 'show', :id => @profile.user.login)
+    @user.discussion.save
+    
+    redirect_to(:controller => 'person', :action => 'show', :id => @user.login)
+  end
+  
+  def add_conversation_message
+    # we don't get the profile_id, where should it comefrom?
+    # @profile = Profile.find params[:profile_id]
+    @user = User.find(params[:id])
+    @conversation = UserRelation.find_by_user_id_and_partner_id(@user.id, current_user.id)
+    @conversation.discussion ? @ocnversation : @conversation.discussion = Discussion.create ;
+    @conversation = @conversation.discussion
+    @profile = @conversation.profile if @conversation.profile#profile is not really used here?
+    @post = Post.new(params[:post])
+    @post.discussion = @conversation
+    @post.user = current_user
+    @post.save!
+    raise "no user given" if @conversation.user.nil?
+    redirect_to(:controller => 'person', :action => 'show', :id => @user.login)
+
+  
   end
     
   protected

@@ -18,7 +18,7 @@ module UserExtension::Socialize
         :finder_sql => 'SELECT users.* FROM users WHERE users.id IN (#{peer_id_cache.to_sql})'
 
       # discussion
-      belongs_to :discussion, :polymorphic => true
+      has_one :discussion, :as => :commentable
       has_many :discussions, :through => :user_relations
       
       #########
@@ -162,10 +162,12 @@ module UserExtension::Socialize
 
   ## Discussions
   
- # specified above: has_many :discussions, :as => :commentable
-  
-  def discussion
-    self.discussions.first
+  def ensure_discussion
+    unless self.discussion
+      self.discussion = Discussion.create()
+      self.discussion.user = self
+    end
+    self.discussion
   end
   
   

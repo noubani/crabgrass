@@ -5,8 +5,8 @@ class UserRelation < ActiveRecord::Base
   after_save :reverse_create!
   after_destroy :reverse_destroy!
 
-      ## DISCUSSIONS
-    belongs_to :discussion
+  ## DISCUSSIONS
+  belongs_to :discussion
 
   
   def reverse_create!    

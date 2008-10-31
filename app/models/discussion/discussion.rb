@@ -18,7 +18,7 @@ class Discussion < ActiveRecord::Base
   #has_one :user, :as => :commentable
   #has_one :profile, :as => :commentable
   # instead
-  belongs_to :user
+  belongs_to :user, :polymorphic => true
   
   has_many :users, :through => :user_relations, :foreign_key => "user_id"
   has_many :partners, :through => :user_relations, :foreign_key => "partner_id"

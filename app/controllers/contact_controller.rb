@@ -18,6 +18,7 @@ class ContactController < ApplicationController
         RequestToFriend.create! :created_by => current_user, :recipient => @user
         flash_message_now :success => 'Contact request has been sent'[:contact_request_sent]
       rescue Exception => exc
+        raise exc
         flash_message_now :exception => exc
       end
     end

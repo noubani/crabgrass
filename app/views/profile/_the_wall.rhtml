@@ -1,7 +1,8 @@
 <div class="profile_widget">
   <h1><%="User Wall"[:user_wall]%></h1>
-  <%= render :partial => 'profile/wall_post', :collection => profile.wall.posts  if profile.wall%>
+  <%= render :partial => 'profile/wall_post', :collection => @wall_discussion.posts  if @wall_discussion%>
   <%= render :partial => 'profile/wall_post_form', :locals => { :profile => profile } %>
   <h1><%="Private Corner"[:private_user_wall]%></h1>
-  <%# render :partial => 'profile/private_wall_post', :collection => @private_wall_posts %>
+  <%= render :partial => 'profile/wall_post', :collection => @conversation.posts if @conversation %>
+  <%= render :partial => 'profile/private_wall_post_form', :locals => { :conversation => @conversation, :profile => profile }%>
 </div>

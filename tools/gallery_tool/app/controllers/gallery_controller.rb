@@ -20,8 +20,8 @@ class GalleryController < BasePageController
   def detail_view
     @showing = @page.showings.find_by_asset_id(params[:id] || :first)
     @image_index = @showing.position+1
-    @next = @showing.lower_item.image
-    @previous = @showing.higher_item
+    @next = @showing.lower_item.image if @showing.lower_item
+    @previous = @showing.higher_item if @showing.higher_item
   end
   
   def comment_image
