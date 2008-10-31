@@ -74,7 +74,7 @@ class PersonController < ApplicationController
       @user.add_contact current_user
       @conversation = UserRelation.find_by_user_id_and_partner_id(@user.id, current_user.id)
     end  
-    @conversation.discussion ? @conversation : @conversation.discussion = Discussion.create ;
+    @conversation.discussion ? @conversation.discussion : @conversation.discussion = Discussion.create ;
     @conversation = @conversation.discussion
     @profile = @conversation.profile if @conversation.profile#profile is not really used here?
     @post = Post.new(params[:post])
