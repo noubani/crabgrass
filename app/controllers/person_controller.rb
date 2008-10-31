@@ -66,7 +66,7 @@ class PersonController < ApplicationController
     @post.save!
     @user.discussion.save
     
-    redirect_to(:controller => 'person', :action => 'show', :id => @user.login)
+    redirect_to(url_for_user(@user))
   end
   
   def add_conversation_message
@@ -84,8 +84,7 @@ class PersonController < ApplicationController
     @post.discussion = @conversation
     @post.user = current_user
     @post.save!
-    redirect_to(:controller => 'person', :action => 'show', :id => @user.login)
-
+    redirect_to(url_for_user(@user))
   
   end
     

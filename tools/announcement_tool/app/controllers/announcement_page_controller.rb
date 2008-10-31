@@ -34,6 +34,7 @@ class AnnouncementPageController < WikiPageController
   def setup_default_view() end
   
   def fetch_wiki
+    #raise @page.inspect
     return true unless @page
     raise "Announcement has no Content" unless @wiki = @page.data
     @locked_for_me = !@wiki.editable_by?(current_user) if logged_in?
