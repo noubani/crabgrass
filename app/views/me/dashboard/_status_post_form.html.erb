@@ -1,0 +1,7 @@
+<%= "Set your Current Status"[:set_current_status] %>
+<% form_tag(url_for(:controller => 'dashboard',
+		    :action => 'add_status_message',
+		    :id => current_user.id)) do -%>
+  <%= text_area :post, :body, :size => '50x4' %>
+  <%= submit_tag :post.t %>
+<% end -%>

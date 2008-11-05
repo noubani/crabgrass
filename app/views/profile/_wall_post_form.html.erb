@@ -2,6 +2,6 @@
 <% form_tag(url_for(:controller => 'person',
 		    :action => 'add_wall_message',
 		    :id => @user.id)) do -%>
-  <%= text_area :post, :body, :size => '20x5' %>
+  <%= text_area :post, :body, :size => '50x4' %>
   <%= submit_tag :post.t %>
 <% end -%>

@@ -13,6 +13,20 @@ class Me::DashboardController < Me::BaseController
     @unread_count  = Page.count_by_path('unread',  options_for_inbox)
     render :layout => false
   end
+  
+  def add_status_message
+    if current_user.discussion.nil?
+      current_user.discussion = Discussion.create
+    end
+    @discussion = current_user.discussion
+    # TODO how do we find out if user is allowed to post  in here?
+    @post = StatusPost.new(params[:post])
+    @post.discussion  = current_user.discussion
+    @post.user = current_user
+    @post.save!
+    current_user.discussion.save
+    redirect_to url_for(:controller => 'me/dashboard', :action => nil)
+  end
 
 #  def page_list
 #    return false unless request.xhr?

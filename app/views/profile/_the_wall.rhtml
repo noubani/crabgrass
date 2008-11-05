@@ -1,5 +1,6 @@
 <div class="profile_widget">
   <h1><%="User Wall"[:user_wall]%></h1>
+   <%= render :partial => 'profile/wall_post_form', :locals => { :profile => profile } %>
   <% if @wall_discussion %>
     <% @wall_discussion.posts.each do |post| %> 
       <% if post.type == 'StatusPost' %> 
@@ -8,6 +9,5 @@
 	<%= render :partial => 'profile/wall_post', :locals => {:wall_post => post} %>
       <% end %> 
     <% end %>
-  <% end %>   
-  <%= render :partial => 'profile/wall_post_form', :locals => { :profile => profile } %>
+  <% end %>
 </div>
