@@ -14,7 +14,7 @@ class Post < ActiveRecord::Base
 
   format_attribute :body
   validates_presence_of :discussion, :user, :body  
-
+  
   ##
   ## methods
   ##
