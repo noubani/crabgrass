@@ -83,7 +83,6 @@ module UserExtension::Socialize
   # this should be the ONLY way that contacts are created
   def add_contact!(other_user, type=nil)
     # we only have friends and normal relations at the moment
-    raise type.to_s
     if type == :friend
       type == "Friendship"
     else

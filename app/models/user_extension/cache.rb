@@ -162,7 +162,10 @@ module UserExtension
     end
 
     def get_user_relation_ids(type)
-      UserRelation.connection.select_values(%Q[SELECT user_relations.partner_id FROM user_relations WHERE type = '#{type}' AND user_relations.user_id = #{self.id}])
+      return [[],[]] unless self.id
+      foes = []
+      friend = UserRelation.connection.select_values(%Q[SELECT user_relations.partner_id FROM user_relations WHERE type = '#{type}' AND user_relations.user_id = #{self.id}])
+    friends = get_
     end
     
     def get_contact_ids()
