@@ -1,0 +1,7 @@
+<% posts.each do |post| %> 
+  <% if post.type == 'StatusPost' %> 
+    <%= render :partial => 'profile/wall_status_post', :locals => {:wall_post => post} %> 
+  <% else %> 
+    <%= render :partial => 'profile/wall_post', :locals => {:wall_post => post} %>
+  <% end %> 
+<% end %>

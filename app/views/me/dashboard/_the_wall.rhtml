@@ -1,0 +1,4 @@
+<div class="the_wall">
+   <%= render :partial => 'status_post_form' %>
+   <%= render :partial => 'profile/wall_discussion', :locals => { :posts => @wall_discussion.posts[0..2] } %>
+</div>
