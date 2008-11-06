@@ -12,10 +12,10 @@ class WallTest < Test::Unit::TestCase
   # test wall creation for users public and private profile
   def test_create_profile_wall
     #test creation
-    assert_kind_of(Discussion, @user.wall)
+    assert_kind_of(Discussion, @user.discussion)
 
     #test destruction
-    assert @user.wall.destroy
+    assert @user.discussion.destroy
   end
   
   
