@@ -81,36 +81,57 @@ module UserExtension::Socialize
   ## CONTACTS
 
   # this should be the ONLY way that contacts are created
-  def add_contact!(other_user, type=nil)
+  def add_contact!(other_user, set_type=nil)
     # we only have friends and normal relations at the moment
-    if type == :friend
-      type == "Friendship"
+    if set_type == :friend
+      set_type == "Friendship"
     else
-      type == nil
+      set_type == nil
     end
     
     # check in the one direction
-    unless self.contacts.find_by_id(other_user.id)
+    
+    rel1 = self.user_relations.find_by_partner_id(other_user.id)
+    rel2 = other_user.user_relations.find_by_partner_id(self.id)
+    if rel1
+      rel1.update_attribute(:type,set_type) unless rel1.type == set_type
+    else
+      rel1 = UserRelation.create!(:user_id => self.id, :partner_id => other_user.id, :type => set_type)
+    end
+    if rel2
+    rel2.update_attribute(:type,set_type) unless rel2.type == set_type
+    else
+    rel2 = UserRelation.create!(:user_id => other_user.id, :partner_id => self.id, :type => set_type)
+    end
+    self.contacts.reset
+    self.update_contacts_cache
+    other_user.contacts.reset
+    other_user.update_contacts_cache
+=begin    
+    unless self.contacts.include?(other_user)
       UserRelation.create!(:user_id => self.id, :partner_id => other_user.id, :type => type)
       self.contacts.reset
       self.update_contacts_cache
     end
     # check the other direction
-    unless other_user.contacts.find_by_id(self.id)
+    unless other_user.contacts.include?(self)
      UserRelation.create!(:user_id => other_user.id, :partner_id => self.id, :type => type)
       other_user.contacts.reset
       other_user.update_contacts_cache
     end
+=end
   end
 
   # this should be the ONLY way contacts are deleted
   def remove_contact!(other_user, type=nil)
     
-    if rel1 = UserRelation.find_by_user_id_and_partner_id_and_type(self.id, other_user.id,type)
+    
+    
+    if rel1 = self.user_relations.find_by_partner_id_and_type(other_user.id,type)
       rel1.destroy
       self.update_contacts_cache
     end  
-    if rel2 = UserRelation.find_by_user_id_and_partner_id(other_user.id,self.id,type)
+    if rel2 = other_user.user_relations.find_by_partner_id_and_type(self.id,type)
        rel2.destroy
        other_user.update_contacts_cache
     end

@@ -103,11 +103,34 @@ module UserExtension
     
     def update_contacts_cache()
       friend,foe = get_contact_ids
-      update_attributes :version => version+1,
-        :friend_id_cache => friend,
-        :foe_id_cache    => foe
-    end
+# hey, i don't know, this doesn't work, because: undefined_method .to_i for [2] (example) i try to write a different way, but that's messy      
+#      update_attributes :version => version+1,
+#        :friend_id_cache => friend,
+#        :foe_id_cache    => foe
+       update_attribute(:friend_id_cache,friend)
       
+    end
+
+    def get_user_relation_ids(type=nil)
+      return [[],[]] unless self.id
+      foes = []
+      if type == nil
+      friend = UserRelation.connection.select_values(%Q[SELECT `user_relations`.`partner_id` FROM `user_relations` WHERE `user_relations`.`type` IS NULL AND `user_relations`.`user_id` = #{self.id}])
+      else  
+      friend = UserRelation.connection.select_values(%Q[SELECT `user_relations`.`partner_id` FROM `user_relations` WHERE `user_relations`.`type` = `#{type}` AND `user_relations`.`user_id` = #{self.id}])
+      end
+      friend
+    end
+    
+    def get_contact_ids()
+      return [[],[]] unless self.id
+      foes = [] # no foes yet.
+      friends = get_user_relation_ids
+      [friends,foes]
+    end
+    
+    
+    
     # include direct memberships, committees, and networks
     def get_group_ids
       if self.id
@@ -161,26 +184,6 @@ module UserExtension
       ])
     end
 
-    def get_user_relation_ids(type)
-      return [[],[]] unless self.id
-      foes = []
-      friend = UserRelation.connection.select_values(%Q[SELECT user_relations.partner_id FROM user_relations WHERE type = '#{type}' AND user_relations.user_id = #{self.id}])
-    friends = get_
-    end
-    
-    def get_contact_ids()
-      return [[],[]] unless self.id
-      foes = [] # no foes yet.
-=begin
-# deprecated during reorganising contacts => user_relations
-      friend = Contact.connection.select_values( %Q[
-        SELECT contacts.contact_id FROM contacts
-        WHERE contacts.user_id = #{self.id}
-      ])
-=end    
-      friends = get_user_relation_ids('Friendship')
-      [foes,friends]
-    end
 
     def update_tag_cache
       # this query sucks and should be optimized
