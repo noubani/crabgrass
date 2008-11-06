@@ -1,0 +1,29 @@
+first_wall_post:
+  id: 1
+  discussion_id: 1
+  user_id: 6
+  body: 'Hey, alles klar?'
+  created_at: <%= 1.day.ago.to_s :db %>
+
+second_wall_post:
+  id: 2
+  user_id: 7
+  discussion_id: 1
+  body: "Was geht ab, Alter!"
+  created_at: <%= 2.days.ago.to_s :db %>
+
+third_wall_post:
+  id: 3
+  user_id: 4
+  discussion_id: 1
+  body: "Ich rauch jetzt erstmal 'n Topf..."
+  created_at: <%= 1.week.ago.to_s :db %>
+
+status_nachricht:
+  id: 4
+  user_id: 1
+  discussion_id: 1
+  type: StatusPost
+  created_at: <%= 4.weeks.ago.to_s :db %>
+  body: "totally stoned"
+

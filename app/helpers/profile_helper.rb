@@ -14,8 +14,7 @@ module ProfileHelper
   
   def add_row_link(title,action)
     link_to_remote title, :url => {:action => action}
-  end
-  
+  end  
   
   # set the clicked star in a 'radio-button'-like group to selected
   # sets a hidden field with the value of true/false

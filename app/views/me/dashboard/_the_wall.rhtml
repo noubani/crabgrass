@@ -1,4 +1,5 @@
 <div class="the_wall">
    <%= render :partial => 'status_post_form' %>
-   <%= render :partial => 'profile/wall_discussion', :locals => { :posts => @wall_discussion.posts[0..2] } %>
+   <h3><%= "Recent Wall Posts"[:recent_wall_posts] %> - <%= link_to 'see all'.t, :show_full_wall => true %> </h3>
+   <%= render :partial => 'profile/wall_discussion', :locals => { :posts => @wall_posts } if @wall_posts %>
 </div>

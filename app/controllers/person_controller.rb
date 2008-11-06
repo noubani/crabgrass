@@ -29,6 +29,11 @@ class PersonController < ApplicationController
     end
     
     @wall_discussion = @user.ensure_discussion
+    if params[:show_full_wall]
+      @wall_posts = @wall_discussion.posts.all(:order => 'created_at DESC')
+    else
+      @wall_posts = @wall_discussion.posts.all(:order => 'created_at DESC')[0..9]
+    end
   end
 
   def search

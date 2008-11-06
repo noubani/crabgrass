@@ -1,5 +1,5 @@
 <div class="profile_widget">
-  <h1><%="User Wall"[:user_wall]%></h1>
+  <h1><%="User Wall"[:user_wall]%> - <%= link_to 'see all'.t, "/#{@user.login}?show_full_wall=true" %></h1>
    <%= render :partial => 'profile/wall_post_form' %>
-   <%= render :partial => 'profile/wall_discussion', :locals => { :posts => @wall_discussion.posts } %>
+   <%= render :partial => 'profile/wall_discussion', :locals => { :posts => @wall_posts} %>
 </div>
