@@ -14,14 +14,7 @@ module ProfileHelper
   
   def add_row_link(title,action)
     link_to_remote title, :url => {:action => action}
-  end
-  
-  def wall_post(post)
-    render(:partial => (post.type == 'StatusPost' ? 
-                        'profile/wall_status_post' : 'profile/wall_post'),
-           :locals => {:wall_post => post})
-  end
-  
+  end  
   
   # set the clicked star in a 'radio-button'-like group to selected
   # sets a hidden field with the value of true/false

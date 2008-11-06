@@ -1,7 +1,9 @@
-<%= "Set your Current Status"[:set_current_status] %>
+<h3><%= "Set your Current Status"[:set_current_status] %></h3>
 <% form_tag(url_for(:controller => 'dashboard',
 		    :action => 'add_status_message',
 		    :id => current_user.id)) do -%>
+  <%= avatar_for(current_user) %>
+  <%= current_user.display_name %>&nbsp;<%= 'is'.t %>&nbsp;
   <%= text_area :post, :body, :size => '50x1' %>
   <%= submit_tag :post.t %>
 <% end -%>
