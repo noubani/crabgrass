@@ -1,16 +1,67 @@
+<%= javascript_tag "
+function add_spacer(droppable, element) {
+  dimensions = element.getDimensions;
+  spacer = Element('div');
+  spacer.style = {height: dimensions['height'], width: dimensions['width'],
+    border: 'dashed 3px #ccc'};
+  $(droppable).insert(spacer, {position: 'bottom'});
+}
+
+function move_element(droppable, element) {
+  
+}
+
+function setup_widgets() {
+  $$('.widget').each(function(e) {
+      new Draggable(e, {handle: 'titlebar', revert:true});
+    });
+  Droppables.add('droppable_1', {accept: 'widget', onDrop:function(e){
+      e.remove();
+      $('droppable_1').insert(e.remove(), {position: 'bottom'});
+    }, onHover:function(e) {
+      spacer = 
+      $('droppable_1').insert(, {position:'bottom'});
+    }});
+  Droppables.add('droppable_2', {accept: 'widget', onDrop:function(e){
+    $('droppable_2').insert(e.remove(), {position: 'bottom'});
+  }});
+}
+" %>
+
 <table class="columns">
 <tr>
-  <td class="left">
+  <td class="left" id="droppable_1">
+    <div class="widget">
+    <div class="titlebar">
+      Widget #1
+      <%= link_to_function '-', "this.up().adjacent('.content')[0].toggle();" %>
+      <%= link_to_function 'x', "this.up(1).hide();" %>
+    </div>
+    <div class="content">
     <h2 class='dim'><%= "Welcome"[:group_home_welcome] %></h2>
     <% if @group.is_council? -%>
       <p><%= 'coordinating committee'.t %></p>
     <% end -%>
     <p class="description"><%=h @group.summary %></p>
     <%= link_span(:bullet, join_group_link, edit_settings_link, leave_group_link, edit_featured_link) %>
+    </div>
+    </div>
   </td>
-  <td class='right'>
-    <%= render :partial => 'group/info_box_memberships' %>
+  <td class="right" id="droppable_2">
+    <div class="widget">
+      <div class="titlebar">
+        Widget #2
+        <%= link_to_function '-', "this.up().adjacent('.content')[0].toggle();" %>
+        <%= link_to_function 'x', "this.up(1).hide();" %>
+      </div>
+      <div class="content">
+        <%= render :partial => 'group/widgets/memberships' %>
+      </div>
+    </div>
   </td>
 </tr>
 </table>
 
+
+
+<%= javascript_tag "setup_widgets();" %>

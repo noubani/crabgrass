@@ -5,7 +5,8 @@ class GroupController < ApplicationController
 
   stylesheet 'groups'
   stylesheet 'tasks', :action => :tasks
-  javascript :extra, :action => :tasks
+  stylesheet 'widgets'
+  javascript :extra#, :action => :tasks
 
   prepend_before_filter :find_group
   before_filter :check_group_visibility
