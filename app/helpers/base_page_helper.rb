@@ -118,7 +118,7 @@ module BasePageHelper
         add = true
         label = 'Add Star (:star_count)'[:add_star_link]
       end
-      label = label % {:star_count => @page.stars_count}
+      label = label % {:star_count => @page.stars}
       url = {:controller => 'base_page/participation', :action => 'update_star',
              :add => add, :page_id => @page.id}
       link = link_to_remote_with_icon(label, :url => url, :icon => icon)
@@ -165,7 +165,7 @@ module BasePageHelper
   def page_tags
     if @page.tags.any?
       links = @page.tags.collect do |tag|
-        tag_link(tag, @page.owner)
+        tag_link(tag, @page.group_name, @page.created_by_login)
       end.join("\n")
       content_tag :div, links, :class => 'tags'
     elsif may_update_tags?
@@ -201,7 +201,18 @@ module BasePageHelper
     top   = object_y.to_i
     right += 17
     top -= 32
+    
+   #Added by eLA
+   if language_direction == "rtl"
+    "display: block; left: 260px; top: #{top}px;"
+  else
     "display: block; right: #{right}px; top: #{top}px;"
+  end
+  #end Addtion by eLA
+  
+  #old
+  # "display: block; left: 260px; top: #{top}px;"
+  
   end
 
   # creates a <a> tag with an ajax link to show a sidebar popup
@@ -317,7 +328,7 @@ module BasePageHelper
   
   def select_page_owner(_erbout)
     owner_name = @page.owner ? @page.owner.name : ''
-    if may_move_page?
+    if current_user.may?(:admin, @page)
       form_tag(url_for(:controller => '/base_page/participation', :action => 'set_owner', :page_id => @page.id)) do 
         possibles = @page.admins.to_select('both_names', 'name')
         unless Conf.ensure_page_owner?
